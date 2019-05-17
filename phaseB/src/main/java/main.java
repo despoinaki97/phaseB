@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
-import javafx.util.Pair;
 
 
 public class main {
@@ -15,6 +14,8 @@ public class main {
         Map<Integer,ArrayList<ResultData>> res = ReadResults();
         HashMap<Integer,ArrayList<RelevantData>> rel = ReadRelevants();
         System.out.println(Metrics.bpref(ReadResultsRanked(), rel));
+        System.out.println(Metrics.avep(ReadResultsRanked(), rel));
+
     }
     
     static Map<Integer,ArrayList<ResultData>> ReadResults(){
