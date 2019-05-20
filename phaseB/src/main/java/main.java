@@ -13,8 +13,9 @@ public class main {
         
         Map<Integer,ArrayList<ResultData>> res = ReadResults();
         HashMap<Integer,ArrayList<RelevantData>> rel = ReadRelevants();
-        System.out.println(Metrics.bpref(ReadResultsRanked(), rel));
-        System.out.println(Metrics.avep(ReadResultsRanked(), rel));
+        System.out.println("Bpref: "+String.format("%.20f",Metrics.bpref(ReadResultsRanked(), rel)));
+        System.out.println("Avep:  "+String.format("%.20f", Metrics.avep(ReadResultsRanked(), rel)));
+        System.out.println("NDCG:  "+String.format("%.20f", Metrics.ndcg(ReadResultsRanked(), rel)));
 
     }
     
@@ -50,6 +51,7 @@ public class main {
     }
     static ArrayList<ResultData> ReadResultsRanked(){
         String folderPath = "../../Results/";
+        
         ArrayList<ResultData> res = new ArrayList<>();
         
         try{

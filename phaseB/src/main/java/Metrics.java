@@ -43,8 +43,8 @@ public class Metrics {
         double avep=0;
         double ratio=0;
         double fileratio=0;
-        int files=0;
-        int reli = 0;
+        int files=1;
+        int reli=0;
         int relevant = 0;
 
         ArrayList<RelevantData> vRel = null;
@@ -63,25 +63,69 @@ public class Metrics {
                 if (temp.get(j).pcmid.equals(res.get(i).pcmid)) {
                     double precision = 0;
                     if (temp.get(j).grade > 0) {
-                        fileratio = reli / files;
+                        fileratio = (double)reli / files;
                         ratio = ratio + fileratio;
                         reli++;
                     }
                     files++;
                 }
             }
-
         }
-        avep = ratio / reli;
+        avep = ratio / relevant;
         return avep;
     
     }
     
     
-    public static double ndcg(){
-        double dcg=0;
-        double ndcg=0;
+    public static double ndcg(ArrayList<ResultData> res, HashMap<Integer, ArrayList<RelevantData>> rel){
         
-        return ndcg;
+        double idcg=0;
+        double dcg=0;
+        double ratio=0;
+        double fileratio=0;
+        int files=1;
+        int relevant = 0;
+
+        ArrayList<RelevantData> vRel = null;
+        ArrayList<ResultData> vRes = null;
+        for (int i=0;i<res.size();i++) {
+            
+            vRel = rel.get(res.get(i).topicNO);
+            for (int k = 0; k < vRel.size(); k++) {
+                double reli=0;
+                if (vRel.get(k).pcmid.equals(res.get(i).pcmid)) {
+                    reli=vRel.get(k).grade;
+                }
+                reli=Math.pow(2, reli)-1;
+                double denom = log2((double)i+1+1);
+                dcg += reli/denom;
+            }
+        }
+        int currentRel=0;
+        for (int grade = 2; grade >= 1; grade--) {
+            for (int i=0;i<res.size();i++) {
+                vRel = rel.get(res.get(i).topicNO);
+                for (int k = 0; k < vRel.size(); k++) {
+                    double reli=0;
+                    if (vRel.get(k).pcmid.equals(res.get(i).pcmid)) {
+                        reli=vRel.get(k).grade;
+                    }
+                    if(reli!=grade) continue;
+                    currentRel++;
+                    reli=Math.pow(2, reli)-1;
+                    double denom = log2((double)currentRel+1);
+                    idcg += reli/denom;
+                }
+            }
+        }
+        if(idcg !=0){
+            return dcg/idcg;
+        }else{
+            return 0;
+        }
+    }
+    private static double log2(double n)
+    {
+        return (Math.log(n) / Math.log(2));
     }
 }
